@@ -1,0 +1,16 @@
+# try/except
+my_input_flag = -1
+while(my_input_flag):
+    try:
+        x = int(input("enter a number :"))
+    except:
+        print("Dude.... that was not a number")
+        print("Let's try again")
+        my_input_flag = -1
+    else:
+        my_input_flag = 0
+        print(x)
+        print(type(x))
+        z = 7+x
+        print(z)
+print("Done")
