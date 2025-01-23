@@ -1,0 +1,4 @@
+x = int(input('enter an index: '))
+my_list = ['zach',7,'games','gym','pizza','baseball','Netflix']
+print(my_list)
+print(my_list[x])
