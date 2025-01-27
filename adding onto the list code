@@ -1,0 +1,7 @@
+my_list = [9,8,7,6,5]
+print(my_list)
+# Appending to the list
+my_list[5:9] = [4,3,2,1]
+print(my_list)
+my_list[9:12] = [0,-1,-2,-3]
+print(my_list)
