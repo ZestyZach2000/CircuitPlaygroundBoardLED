@@ -1,0 +1,16 @@
+print('This is a guessing Game')
+print('Ready?')
+
+number_2_guess = 7
+print(7)
+
+user_guess = 5
+print(type(user_guess))
+print(5)
+
+if number_2_guess == user_guess:
+    print("Good Guess =, you are a winner!")
+
+else:
+    print('Better luck next time')
+
