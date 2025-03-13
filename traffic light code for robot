@@ -1,0 +1,52 @@
+from gpiozero import LED
+from time import sleep
+
+red_LED = LED(3)      
+yellow_LED = LED(15)  
+green_LED = LED(27)  
+
+def stop_light(stop_light_status):
+    print("Traffic Light Status:", stop_light_status)
+
+    if stop_light_status['red_LED']:
+        red_LED.on()
+    else:
+        red_LED.off()
+
+    if stop_light_status['yellow_LED']:
+        yellow_LED.on()
+    else:
+        yellow_LED.off()
+
+    if stop_light_status['green_LED']:
+        green_LED.on()
+    else:
+        green_LED.off()
+
+def test_stop_light():
+    print("Testing Traffic Light LEDs")
+
+    # Test sequence
+    test_patterns = [
+        {'red_LED': 1, 'yellow_LED': 0, 'green_LED': 0},  
+        {'red_LED': 0, 'yellow_LED': 1, 'green_LED': 0},  
+        {'red_LED': 0, 'yellow_LED': 0, 'green_LED': 1},
+        {'red_LED': 1, 'yellow_LED': 1, 'green_LED': 1},
+        {'red_LED': 0, 'yellow_LED': 0, 'green_LED': 0},
+    ]
+
+    for pattern in test_patterns:
+        stop_light(pattern)
+        sleep(2)
+
+
+def main():
+    print("Welcome To The STEAM Clown Makey Bot")
+
+    traffic_light = {'red_LED': 0, 'yellow_LED': 1, 'green_LED': 1}
+
+    stop_light(traffic_light)
+
+    test_stop_light()
+
+main()
