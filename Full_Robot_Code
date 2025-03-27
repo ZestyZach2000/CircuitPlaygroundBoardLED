@@ -1,0 +1,143 @@
+import threading
+from gpiozero import LED, RGBLED, Servo
+from time import sleep
+
+
+red_LED = LED(3)      
+yellow_LED = LED(15)  
+green_LED = LED(27)  
+
+myGPIO = 14
+myCorrection = 0.45
+maxPW = (2.0 + myCorrection) / 1000
+minPW = (1.0 + myCorrection) / 1000
+servo = Servo(myGPIO, min_pulse_width=minPW, max_pulse_width=maxPW)
+
+def move_servo():
+    while True:
+        servo.mid()
+        sleep(1)
+        servo.min()
+        sleep(1)
+        servo.mid()
+        sleep(1)
+        servo.max()
+        sleep(1)
+
+servo_thread = threading.Thread(target=move_servo, daemon=True)
+servo_thread.start()
+
+def stop_light(stop_light_status):
+    print("Traffic Light Status:", stop_light_status)
+
+    if stop_light_status['red_LED']:
+        red_LED.on()
+    else:
+        red_LED.off()
+
+    if stop_light_status['yellow_LED']:
+        yellow_LED.on()
+    else:
+        yellow_LED.off()
+
+    if stop_light_status['green_LED']:
+        green_LED.on()
+    else:
+        green_LED.off()
+
+def test_stop_light():
+    print("Testing Traffic Light LEDs")
+
+    # Test sequence
+    test_patterns = [
+        {'red_LED': 1, 'yellow_LED': 0, 'green_LED': 0},  
+        {'red_LED': 0, 'yellow_LED': 1, 'green_LED': 0},  
+        {'red_LED': 0, 'yellow_LED': 0, 'green_LED': 1},
+        {'red_LED': 1, 'yellow_LED': 1, 'green_LED': 1},
+        {'red_LED': 0, 'yellow_LED': 0, 'green_LED': 0},
+    ]
+
+    for pattern in test_patterns:
+        stop_light(pattern)
+        sleep(2)
+
+
+def main():
+    print("Welcome To The STEAM Clown Makey Bot")
+
+    traffic_light = {'red_LED': 0, 'yellow_LED': 1, 'green_LED': 1}
+
+    stop_light(traffic_light)
+
+    test_stop_light()
+
+main()
+
+
+
+# Debug Settings
+debug_messages = 1  # 1 to enable debug messages, 0 to disable
+if debug_messages:
+    print("Debug Messages are 'ON'")
+else:
+    print("Debug Messages are 'OFF'")
+
+# Raspberry Pi Pins (Change if needed)
+left_eye_led = RGBLED(red=5, green=6, blue=12)
+right_eye_led = RGBLED(red=26, green=20, blue=21)
+
+def eyes_RGB(left_eye_status, right_eye_status):
+    """Function to control both RGB LEDs based on dictionary values."""
+    if debug_messages:
+        print("Running eyes_RGB function")
+        print(f"Left Eye RGB values: {left_eye_status}")
+        print(f"Right Eye RGB values: {right_eye_status}")
+   
+    left_eye_led.color = (
+        left_eye_status.get('red_RGBLED', 0),
+        left_eye_status.get('green_RGBLED', 0),
+        left_eye_status.get('blue_RGBLED', 0)
+    )
+   
+    right_eye_led.color = (
+        right_eye_status.get('red_RGBLED', 0),
+        right_eye_status.get('green_RGBLED', 0),
+        right_eye_status.get('blue_RGBLED', 0)
+    )
+
+def main():
+    """Main function to control LEDs based on user input."""
+    print("Welcome To The STEAM Clown Makey Bot")
+   
+    while True:
+        try:
+            if debug_messages:
+                print("Calling eyes_RGB function")
+           
+            # Get user input for new RGB values for both eyes
+            print("Enter values for LEFT eye:")
+            left_red_val = float(input("Left Eye - Enter red value (0-1): "))
+            left_green_val = float(input("Left Eye - Enter green value (0-1): "))
+            left_blue_val = float(input("Left Eye - Enter blue value (0-1): "))
+           
+            print("Enter values for RIGHT eye:")
+            right_red_val = float(input("Right Eye - Enter red value (0-1): "))
+            right_green_val = float(input("Right Eye - Enter green value (0-1): "))
+            right_blue_val = float(input("Right Eye - Enter blue value (0-1): "))
+           
+            # Update dictionaries and apply new values
+            left_eye_RGBLEDs = {'red_RGBLED': left_red_val, 'green_RGBLED': left_green_val, 'blue_RGBLED': left_blue_val}
+            right_eye_RGBLEDs = {'red_RGBLED': right_red_val, 'green_RGBLED': right_green_val, 'blue_RGBLED': right_blue_val}
+            eyes_RGB(left_eye_RGBLEDs, right_eye_RGBLEDs)
+           
+           
+        except KeyboardInterrupt:
+            print("\nExiting program...")
+            left_eye_led.off()
+            right_eye_led.off()
+            break
+        except ValueError:
+            print("Invalid input! Please enter values between 0 and 1.")
+
+# Run main function
+main()
