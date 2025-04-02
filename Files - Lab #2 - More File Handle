@@ -1,0 +1,3 @@
+xfile = open("text-file-matrix.txt", "r")
+for cheese in xfile:
+    print(cheese)
